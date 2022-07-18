@@ -5,17 +5,35 @@ import Products from './pages/Products';
 import Error from './pages/Error';
 import ShardeLayout from './pages/SharedLayout'
 import SingleProduct from './pages/SingleProduct'
+import Dashboard from './pages/Dashboard';
+import Login from './pages/Login';
+import ProtectedRoute from './pages/ProtectedRoute';
+import SharedProductLayout from './pages/SharedProductLayout';
+import { useState } from 'react';
 
 
 function App() {
+  const [user ,setUser] = useState(null);
+
   return (
   <BrowserRouter>  
     <Routes>
       <Route path='/' element={<ShardeLayout />} >
         <Route index element={<Home />} />
         <Route path='/about' element={<About />} />
-        <Route path='/products' element={<Products />} />
-        <Route path='/products/:productId' element={<SingleProduct />} />
+        <Route path='products' element={<SharedProductLayout />}>
+          <Route index element={<Products />} />
+          <Route path=':productId' element={<SingleProduct />} />
+        </Route>
+        <Route path='login' element={<Login setUser={setUser} />} />
+        <Route
+            path='dashboard'
+            element={
+              <ProtectedRoute user={user}>
+                <Dashboard user={user} />
+              </ProtectedRoute>
+            }
+        />
         <Route path='*' element={<Error />} />
       </Route>
     </Routes>    
